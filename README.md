@@ -117,8 +117,8 @@ The default directory is `runtime/`.
 
 The server accepts connections from this computer only.
 It does not make the application public.
-The **Gemini configured** label shows that a key and the expected database schema are present.
-The label does not prove that Google accepts the key.
+The page shows a setup message if the key or the expected database schema is missing.
+A successful report confirms that Google accepted the key for that request.
 
 If port 8000 is in use, select another port.
 

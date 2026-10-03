@@ -181,9 +181,6 @@ $("new-request").addEventListener("click", () => {
 async function start() {
   try {
     configuration = await api("/api/status");
-    $("connection-label").textContent = configuration.ready ? "Gemini configured" : "Setup needed";
-    $("model-label").textContent = configuration.model;
-    $("connection-dot").classList.toggle("error", !configuration.ready);
     $("configuration-error").textContent = configuration.problem || "";
     $("configuration-error").hidden = configuration.ready;
     setBusy(false);
@@ -192,7 +189,6 @@ async function start() {
     const selected = tickets.find(t => t.id === configuration.active_ticket) || tickets.find(t => t.id === stored);
     if (selected) { $("request").value = selected.request; updateCount(); await showTicket(selected); }
   } catch (error) {
-    $("connection-label").textContent = "Connection unavailable";
     setBusy(false); showError(`${error.message} Start the local server, then reload this page.`);
   }
 }

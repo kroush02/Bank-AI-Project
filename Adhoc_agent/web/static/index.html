@@ -11,12 +11,11 @@
 <body>
   <header class="topbar">
     <a class="brand" href="/" aria-label="Bank AI home"><span class="brand-icon" aria-hidden="true">B<span>·</span></span><span>BANK AI <small>REPORT STUDIO</small></span></a>
-    <div class="environment"><span class="status-dot"></span> Local demo <span class="divider">/</span> <span>Sample bank data</span></div>
+    <div class="environment">Sample bank data</div>
   </header>
   <main>
     <section class="intro">
-      <div><p class="eyebrow">ASK. VALIDATE. PUBLISH.</p><h1>From question to report.</h1><p class="subtitle">Ask in plain English. Follow the agents. Get a report you can share.</p></div>
-      <div class="connection"><span id="connection-dot" class="status-dot"></span><div><strong id="connection-label">Connecting</strong><span id="model-label">Local reporting workspace</span></div></div>
+      <div><h1>Your bank reporting agent.</h1><p class="subtitle">Ask in plain English. Follow the agents. Get a report you can share.</p></div>
     </section>
     <div id="configuration-error" class="notice" role="alert" hidden></div>
     <div class="workspace">
@@ -33,7 +32,7 @@
             <button type="button" data-example="inactive">Customers without activity <span aria-hidden="true">↗</span></button>
           </div>
           <button id="generate" class="primary" type="submit"><span>Generate report</span><span aria-hidden="true">→</span></button>
-          <p class="helper">Uses Gemini. Your report files stay on this computer.</p>
+          <p class="helper">Your report files stay on this computer.</p>
         </form>
         <div id="request-error" class="notice" role="alert" hidden></div>
         <div class="pipeline">
@@ -68,7 +67,7 @@
       </section>
     </div>
     <section class="history" aria-labelledby="history-heading"><div class="history-heading"><div><p class="eyebrow">SAVED ON THIS COMPUTER</p><h2 id="history-heading">Recent requests</h2></div><button id="new-request" class="text-button" type="button">New request <span aria-hidden="true">+</span></button></div><p id="no-history" class="muted">Your requests will appear here after you submit them.</p><div id="history-list"></div></section>
-    <footer><span>Bank AI <span class="footer-dot">·</span> Local demonstration</span><span>Customer + transaction data <span class="footer-dot">·</span> Read-only queries</span></footer>
+    <footer><span>Bank AI Report Studio</span></footer>
   </main>
 </body>
 </html>
