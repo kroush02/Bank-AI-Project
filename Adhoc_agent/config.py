@@ -41,7 +41,7 @@ class Settings:
         return cls(
             runtime=Path(runtime or os.getenv("BANK_RUNTIME_DIR", "runtime")).resolve(),
             api_key=os.getenv("GEMINI_API_KEY", "") or os.getenv("GOOGLE_API_KEY", ""),
-            model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+            model=os.getenv("GEMINI_MODEL", "gemini-3.8-flash"),
             max_rows=max_rows,
             query_timeout=timeout,
         )

@@ -21,7 +21,7 @@ cp .env.example .env
 
 Edit `.env` locally and set `GEMINI_API_KEY` to your Google AI Studio Gemini key.
 The file is ignored by Git. Existing environment variables override `.env`.
-`GEMINI_MODEL` defaults to `gemini-2.5-flash`; set it to a compatible model that
+`GEMINI_MODEL` defaults to `gemini-3.8-flash`; set it to a compatible model that
 your key can access. This uses Google's `google-genai` SDK and structured JSON
 output. See the [Google API reference](https://ai.google.dev/api/generate-content).
 Keys can be created in [Google AI Studio](https://aistudio.google.com/apikey).
