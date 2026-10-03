@@ -42,12 +42,15 @@ class LocalQueue:
             conn.execute("INSERT INTO tickets (id,request) VALUES (?,?)", (ticket_id, request))
         return ticket_id
 
-    def claim(self) -> Ticket | None:
+    def claim(self, ticket_id: str | None = None) -> Ticket | None:
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
-            row = conn.execute(
-                "SELECT id,request FROM tickets WHERE status='pending' ORDER BY rowid LIMIT 1"
-            ).fetchone()
+            sql = "SELECT id,request FROM tickets WHERE status='pending'"
+            params = ()
+            if ticket_id is not None:
+                sql += " AND id=?"
+                params = (ticket_id,)
+            row = conn.execute(sql + " ORDER BY rowid LIMIT 1", params).fetchone()
             if row is None:
                 return None
             conn.execute(
@@ -56,6 +59,19 @@ class LocalQueue:
                 (row["id"],),
             )
             return Ticket(row["id"], row["request"])
+
+    def get(self, ticket_id: str) -> dict | None:
+        with self._connect() as conn:
+            row = conn.execute("SELECT * FROM tickets WHERE id=?", (ticket_id,)).fetchone()
+        return {**dict(row), "trace": json.loads(row["trace"])} if row else None
+
+    def progress(self, ticket_id: str, trace: list):
+        with self._connect() as conn:
+            conn.execute(
+                "UPDATE tickets SET trace=?, updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') "
+                "WHERE id=? AND status='in_progress'",
+                (json.dumps(trace), ticket_id),
+            )
 
     def finish(
         self,

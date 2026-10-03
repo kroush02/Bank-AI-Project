@@ -25,24 +25,28 @@ class AdhocWorkflow:
         )
         self.report_agent = ReportAgent(settings.reports)
 
-    def run_once(self) -> WorkflowResult | None:
+    def run_once(self, ticket_id: str | None = None) -> WorkflowResult | None:
         # Fail before claiming a ticket when the environment is not ready.
         check_schema(self.settings.database)
-        ticket = self.request_agent.fetch()
+        ticket = self.request_agent.fetch(ticket_id)
         if ticket is None:
             return None
         trace = [{"agent": "request", "status": "fetched"}]
         stage = "sql"
         try:
+            self.queue.progress(ticket.id, trace + [{"agent": stage, "status": "running"}])
             plan = self.sql_agent.generate(ticket)
             trace.append({"agent": stage, "status": "generated"})
             stage = "validation"
+            self.queue.progress(ticket.id, trace + [{"agent": stage, "status": "running"}])
             receipt = self.validation_agent.validate(ticket, plan)
             trace.append({"agent": stage, "status": "passed"})
             stage = "extraction"
+            self.queue.progress(ticket.id, trace + [{"agent": stage, "status": "running"}])
             data = self.extraction_agent.extract(receipt)
             trace.append({"agent": stage, "status": "extracted", "row_count": len(data.rows)})
             stage = "report"
+            self.queue.progress(ticket.id, trace + [{"agent": stage, "status": "running"}])
             report = self.report_agent.publish(ticket, receipt, data, self.client.label, trace)
             trace.append({"agent": stage, "status": "published"})
             self.queue.finish(ticket.id, "completed", trace, report_path=str(report))

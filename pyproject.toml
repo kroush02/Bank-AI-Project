@@ -23,6 +23,9 @@ bank-agent = "Adhoc_agent.cli:main"
 [tool.setuptools.packages.find]
 include = ["Adhoc_agent*"]
 
+[tool.setuptools.package-data]
+"Adhoc_agent.web" = ["static/*.html", "static/*.css", "static/*.js"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]

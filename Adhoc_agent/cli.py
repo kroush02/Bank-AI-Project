@@ -25,9 +25,18 @@ def main(argv=None) -> int:
     run = sub.add_parser("run", help="Process pending tickets using Gemini")
     run.add_argument("--max-tickets", type=int, default=1)
     sub.add_parser("demo", help="Process the fixed offline fixture, with no API calls")
+    serve = sub.add_parser("serve", help="Open the local Report Studio web interface")
+    serve.add_argument("--port", type=int, default=8000)
     args = parser.parse_args(argv)
     try:
         settings = Settings.from_env(args.runtime)
+        if args.command == "serve":
+            from Adhoc_agent.web.server import serve
+
+            if not 1 <= args.port <= 65535:
+                raise WorkflowError("Port must be 1..65535.")
+            serve(settings, args.port)
+            return 0
         if args.command == "init-demo":
             create_sample_database(settings.database)
             LocalQueue(settings.queue)

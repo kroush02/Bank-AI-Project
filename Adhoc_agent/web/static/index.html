@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="studio-token" content="__CSRF_TOKEN__">
+  <title>Report Studio · Bank AI</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Bank AI home"><span class="brand-icon" aria-hidden="true">B<span>·</span></span><span>BANK AI <small>REPORT STUDIO</small></span></a>
+    <div class="environment"><span class="status-dot"></span> Local demo <span class="divider">/</span> <span>Sample bank data</span></div>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">ASK. VALIDATE. PUBLISH.</p><h1>From question to report.</h1><p class="subtitle">Ask in plain English. Follow the agents. Get a report you can share.</p></div>
+      <div class="connection"><span id="connection-dot" class="status-dot"></span><div><strong id="connection-label">Connecting</strong><span id="model-label">Local reporting workspace</span></div></div>
+    </section>
+    <div id="configuration-error" class="notice" role="alert" hidden></div>
+    <div class="workspace">
+      <section class="request-panel" aria-labelledby="request-heading">
+        <div class="section-title"><span class="step-number">01</span><h2 id="request-heading">Make a request</h2></div>
+        <form id="request-form">
+          <label for="request">What would you like to know?</label>
+          <textarea id="request" name="request" rows="6" maxlength="8000" required placeholder="For example: Show each customer’s completed EGP transaction total for September 2026, highest first."></textarea>
+          <div class="input-meta"><span>Specify a date, currency, and the data you need.</span><span id="character-count">0 / 8,000</span></div>
+          <p class="example-label">START WITH AN EXAMPLE</p>
+          <div class="examples">
+            <button type="button" data-example="totals">Customer totals <span aria-hidden="true">↗</span></button>
+            <button type="button" data-example="transactions">Transaction details <span aria-hidden="true">↗</span></button>
+            <button type="button" data-example="inactive">Customers without activity <span aria-hidden="true">↗</span></button>
+          </div>
+          <button id="generate" class="primary" type="submit"><span>Generate report</span><span aria-hidden="true">→</span></button>
+          <p class="helper">Uses Gemini. Your report files stay on this computer.</p>
+        </form>
+        <div id="request-error" class="notice" role="alert" hidden></div>
+        <div class="pipeline">
+          <div class="pipeline-heading"><h3>Agent activity</h3><span id="run-status" aria-live="polite">Ready when you are</span></div>
+          <ol id="stages">
+            <li data-stage="request"><span class="stage-mark">1</span><div><strong>Fetch request</strong><small>Save and claim your ticket</small></div><span class="stage-state">Waiting</span></li>
+            <li data-stage="sql"><span class="stage-mark">2</span><div><strong>Write SQL</strong><small>Turn your request into a query</small></div><span class="stage-state">Waiting</span></li>
+            <li data-stage="validation"><span class="stage-mark">3</span><div><strong>Validate</strong><small>Check the query and your requirements</small></div><span class="stage-state">Waiting</span></li>
+            <li data-stage="extraction"><span class="stage-mark">4</span><div><strong>Extract data</strong><small>Read the customer and transaction tables</small></div><span class="stage-state">Waiting</span></li>
+            <li data-stage="report"><span class="stage-mark">5</span><div><strong>Publish report</strong><small>Save the report and download files</small></div><span class="stage-state">Waiting</span></li>
+          </ol>
+        </div>
+      </section>
+      <section class="result-panel" aria-labelledby="result-heading" aria-busy="false">
+        <div class="result-header"><div class="section-title"><span class="step-number">02</span><h2 id="result-heading">Your report</h2></div><span id="report-badge" class="badge">No report yet</span></div>
+        <div id="empty-report" class="empty-report">
+          <div class="report-illustration" aria-hidden="true"><span class="paper-top"></span><span class="paper-line long"></span><span class="paper-line"></span><span class="paper-grid"></span><span class="paper-seal">✓</span></div>
+          <h3 id="empty-title">A clear answer, ready to share.</h3>
+          <p id="empty-description">Your published report will appear here.<br>Start with a question or choose an example.</p>
+          <div class="formats"><span>HTML report</span><span>CSV</span><span>JSON</span></div>
+        </div>
+        <div id="report-content" hidden>
+          <p id="report-request" class="report-request"></p>
+          <div class="report-stats"><div><span>RESULT ROWS</span><strong id="row-count">—</strong></div><div><span>PUBLISHED</span><strong id="published-time">—</strong></div><div><span>VALIDATION</span><strong class="validated">Passed <span aria-hidden="true">✓</span></strong></div></div>
+          <div class="report-actions"><a id="open-report" class="primary compact" target="_blank" rel="noopener">Open report <span aria-hidden="true">↗</span></a><a id="download-csv" class="secondary" download>CSV ↓</a><a id="download-json" class="secondary" download>JSON ↓</a><a id="download-bundle" class="secondary" download>All files ↓</a></div>
+          <div class="preview-heading"><h3>Data preview</h3><span id="preview-count"></span></div>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Report data preview"><table id="data-table"><thead></thead><tbody></tbody></table></div>
+          <p id="empty-data" class="empty-data" hidden>No matching records. The report contains the column names and your request.</p>
+          <div class="publication"><span class="publication-icon" aria-hidden="true">✓</span><div><strong>Published to this computer</strong><code id="report-path"></code></div></div>
+          <details class="query-details"><summary>View SQL and validation</summary><p id="review-reason"></p><pre id="sql"></pre><h4>Parameters</h4><pre id="parameters"></pre><a id="download-metadata" download>Download audit metadata ↓</a></details>
+        </div>
+      </section>
+    </div>
+    <section class="history" aria-labelledby="history-heading"><div class="history-heading"><div><p class="eyebrow">SAVED ON THIS COMPUTER</p><h2 id="history-heading">Recent requests</h2></div><button id="new-request" class="text-button" type="button">New request <span aria-hidden="true">+</span></button></div><p id="no-history" class="muted">Your requests will appear here after you submit them.</p><div id="history-list"></div></section>
+    <footer><span>Bank AI <span class="footer-dot">·</span> Local demonstration</span><span>Customer + transaction data <span class="footer-dot">·</span> Read-only queries</span></footer>
+  </main>
+</body>
+</html>
